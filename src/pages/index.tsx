@@ -1,5 +1,5 @@
-import { FC } from 'react';
+import HomeContent from '../components/pages/home';
 
-const IndexPage: FC = () => <div>Comenzamos</div>;
+const Home = () => <HomeContent />;
 
-export default IndexPage;
+export default Home;
