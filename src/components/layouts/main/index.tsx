@@ -11,7 +11,7 @@ interface LayoutProps {
 const MainLayout: FC<LayoutProps> = ({ children, titleSEO, descriptionSEO }) => (
   <>
     <NextSeo
-      titleTemplate="%s - Backbone"
+      titleTemplate="%s - Backbone Santiago"
       title={titleSEO}
       description={descriptionSEO}
       openGraph={{

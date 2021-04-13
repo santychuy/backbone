@@ -1,4 +1,4 @@
-import HomeContent from '../components/pages/home';
+import HomeContent from '@/pageContent/home';
 
 const Home = () => <HomeContent />;
 

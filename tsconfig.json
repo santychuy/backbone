@@ -3,7 +3,9 @@
     "baseUrl": "./src",
     "paths": {
       "@/components/*": ["components/*"],
-      "@/layout/*": ["components/layouts/*"]
+      "@/layout/*": ["components/layouts/*"],
+      "@/store/*": ["store/*"],
+      "@/pageContent/*": ["components/pages/*"]
     },
     "allowJs": true,
     "alwaysStrict": true,
