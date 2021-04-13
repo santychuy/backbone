@@ -1,4 +1,4 @@
-import CronJobsAddContent from '@/components/pages/cronjobs/add';
+import CronJobsAddContent from '@/components/pages/add';
 
 const CronJobsAdd = () => <CronJobsAddContent />;
 

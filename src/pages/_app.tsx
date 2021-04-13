@@ -1,9 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import 'normalize.css';
 import type { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
-}
+const App = ({ Component, pageProps }: AppProps) => {
+  const queryClient = new QueryClient();
 
-export default MyApp;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  );
+};
+
+export default App;

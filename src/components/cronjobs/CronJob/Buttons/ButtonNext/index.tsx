@@ -1,4 +1,9 @@
+import { useEffect } from 'react';
+import { useMutation } from 'react-query';
+
 import { useCronJobsState } from '@/store/cronjobs';
+
+import { createCronJob } from '@/api/cronjobs';
 
 const ButtonNext = () => {
   const {
@@ -21,9 +26,15 @@ const ButtonNext = () => {
     setSeconds,
     setName,
     setDescription,
+    cronJob,
+    name,
+    description,
+    workflowId,
   } = useCronJobsState();
 
-  const handleNextStep = () => {
+  const { mutate } = useMutation(createCronJob);
+
+  const handleNextStep = async () => {
     switch (step) {
       case 0:
         setSeconds(valueCron);
@@ -56,16 +67,33 @@ const ButtonNext = () => {
         nextStep();
         break;
       default:
-        setDayWeek(valueCron);
-        setCronJob(`${seconds} ${minute} ${hour} ${dayMonth} ${month} ${valueCron}`);
-        setValueCron('');
-        resetStep();
-        setName('');
-        setDescription('');
-        setCronJob('');
+        if (name !== '' && description !== '') {
+          setDayWeek(valueCron);
+          setCronJob(`${seconds} ${minute} ${hour} ${dayMonth} ${month} ${valueCron}`);
+          setValueCron('');
+          nextStep();
+        } else {
+          console.log('Completar nombre y descripcion');
+        }
         break;
     }
   };
+
+  useEffect(() => {
+    if (step === 6) {
+      mutate({ name, description, scheduling: cronJob, workflow_id: workflowId });
+      setCronJob('* * * * * *');
+      setSeconds('*');
+      setMinute('*');
+      setHour('*');
+      setDayMonth('*');
+      setMonth('*');
+      setDayWeek('*');
+      setName('');
+      setDescription('');
+      resetStep();
+    }
+  }, [cronJob]);
 
   return (
     <button type="button" onClick={handleNextStep}>

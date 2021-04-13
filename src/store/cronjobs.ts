@@ -5,6 +5,8 @@ interface CronJobsStateType extends State {
   setName: (value: string) => void;
   description: string;
   setDescription: (value: string) => void;
+  workflowId: number;
+  setWorkflowId: (value: number) => void;
   step: number;
   nextStep: () => void;
   prevStep: () => void;
@@ -29,9 +31,11 @@ interface CronJobsStateType extends State {
 
 export const useCronJobsState = create<CronJobsStateType>(set => ({
   name: '',
-  setName: value => set({ name: value }),
+  setName: name => set({ name }),
   description: '',
-  setDescription: value => set({ description: value }),
+  setDescription: description => set({ description }),
+  workflowId: 0,
+  setWorkflowId: workflowId => set({ workflowId }),
   step: 0,
   nextStep: () => set(state => ({ step: state.step + 1 })),
   prevStep: () => set(state => ({ step: state.step - 1 })),
