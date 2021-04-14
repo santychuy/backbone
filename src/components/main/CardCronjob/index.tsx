@@ -26,8 +26,7 @@ const CardCronjob: FC<CardCronjobProps> = ({
     setName,
     setDescription,
     setWorkflowId,
-    setCronJob,
-    setStep,
+    setCronjob,
     setIsEditing,
     setCronJobId,
   } = useCronJobsState();
@@ -38,8 +37,7 @@ const CardCronjob: FC<CardCronjobProps> = ({
     setName(name);
     setDescription(description);
     setWorkflowId(workflowId);
-    setCronJob(cronjob);
-    setStep(5);
+    setCronjob(cronjob);
     setCronJobId(id);
     setIsEditing(true);
     push('/add');

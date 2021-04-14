@@ -1,13 +1,23 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from 'react-query';
 import { GetStaticProps } from 'next';
 
 import { getWorkflows, Workflow } from '@/api/workflows';
 import { useCronJobsState } from '@/store/cronjobs';
+import { schema } from '@/validations/cronjobInformationSchema';
 
-import { CronJobInfoContainer } from './styles';
+import { CronJobInfoContainer, Container } from './styles';
 
-const CronJobInformation: FC<{ workflows: Workflow[] }> = ({ workflows }) => {
+interface CronJobInfoForm {
+  name: string;
+  description: string;
+  workflow_id: number;
+}
+
+const CronJobInformation: FC<{ workflows?: Workflow[] }> = ({ workflows }) => {
   const {
     name,
     setName,
@@ -15,43 +25,53 @@ const CronJobInformation: FC<{ workflows: Workflow[] }> = ({ workflows }) => {
     setDescription,
     setWorkflowId,
     workflowId,
+    setStepCron,
   } = useCronJobsState();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CronJobInfoForm>({
+    mode: 'onSubmit',
+    resolver: yupResolver(schema),
+  });
 
   const { data, isLoading } = useQuery('workflows', getWorkflows, {
     initialData: workflows,
   });
 
+  const onSubmit = handleSubmit(dataSubmit => {
+    setName(dataSubmit.name);
+    setDescription(dataSubmit.description);
+    setWorkflowId(dataSubmit.workflow_id);
+    setStepCron(1);
+  });
+
   return (
-    <CronJobInfoContainer>
-      <input
-        placeholder="Name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        name="name"
-      />
-      <textarea
-        placeholder="Description"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-        name="description"
-      />
-      {!isLoading && (
-        <select
-          name="workflow"
-          onChange={e => setWorkflowId(Number(e.target.value))}
-          value={workflowId}
-        >
-          <option disabled selected>
-            Seleccionar Workflow
-          </option>
-          {data?.map(workflow => (
-            <option key={workflow.id} value={workflow.id}>
-              {workflow.name}
-            </option>
-          ))}
-        </select>
-      )}
-    </CronJobInfoContainer>
+    <Container onSubmit={onSubmit}>
+      <CronJobInfoContainer>
+        <input placeholder="Name" defaultValue={name} {...register('name')} />
+        {errors.name && <p>{errors.name.message}</p>}
+        <textarea
+          placeholder="Description"
+          defaultValue={description}
+          {...register('description')}
+        />
+        {errors.description && <p>{errors.description.message}</p>}
+        {!isLoading && (
+          <select defaultValue={workflowId} {...register('workflow_id')}>
+            {data?.map(workflow => (
+              <option key={workflow.id} value={workflow.id}>
+                {workflow.name}
+              </option>
+            ))}
+          </select>
+        )}
+        {errors.workflow_id && <p>{errors.workflow_id.message}</p>}
+        <button type="submit">Siguiente</button>
+      </CronJobInfoContainer>
+    </Container>
   );
 };
 

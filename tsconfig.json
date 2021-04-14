@@ -6,7 +6,8 @@
       "@/layout/*": ["components/layouts/*"],
       "@/store/*": ["store/*"],
       "@/pageContent/*": ["components/pages/*"],
-      "@/api/*": ["api/*"]
+      "@/api/*": ["api/*"],
+      "@/validations/*": ["validations/*"]
     },
     "allowJs": true,
     "alwaysStrict": true,

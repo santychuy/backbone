@@ -1,63 +1,66 @@
-import { ChangeEvent } from 'react';
-import { useCronJobsState } from '@/store/cronjobs';
+/* eslint-disable react/jsx-props-no-spreading */
+import { useMutation } from 'react-query';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import CronJobPreview from './CronJobPreview';
-import LabelDate from './LabelDate';
-import ButtonPrev from './Buttons/ButtonPrev';
-import ButtonNext from './Buttons/ButtonNext';
-import { ButtonContainer, CronJobContainer } from './styles';
+import { createCronJob, editCronJob } from '@/api/cronjobs';
+import { useCronJobsState } from '@/store/cronjobs';
+import { schema } from '@/validations/cronjobSchema';
+
+import { Container, CronJobContainer } from './styles';
 
 const CronJob = () => {
   const {
-    valueCron,
-    setValueCron,
-    step,
-    setSeconds,
-    setMinute,
-    setHour,
-    setDayMonth,
-    setMonth,
-    setDayWeek,
+    cronjob,
+    isEditing,
+    cronJobId,
+    name,
+    description,
+    workflowId,
   } = useCronJobsState();
+  const createCronjobMutation = useMutation(createCronJob);
+  const editCronjobMutation = useMutation(editCronJob);
+  const { push } = useRouter();
 
-  const handleChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    switch (step) {
-      case 0:
-        setSeconds(value);
-        break;
-      case 1:
-        setMinute(value);
-        break;
-      case 2:
-        setHour(value);
-        break;
-      case 3:
-        setDayMonth(value);
-        break;
-      case 4:
-        setMonth(value);
-        break;
-      case 5:
-        setDayWeek(value);
-        break;
-      default:
-        break;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ cronjob: string }>({
+    mode: 'onSubmit',
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = handleSubmit(data => {
+    if (isEditing) {
+      editCronjobMutation.mutate({
+        id: cronJobId!,
+        name,
+        description,
+        scheduling: data.cronjob,
+        workflowId: workflowId!,
+      });
+    } else {
+      createCronjobMutation.mutate({
+        name,
+        description,
+        scheduling: data.cronjob,
+        workflow_id: workflowId!,
+      });
     }
-
-    setValueCron(value);
-  };
+    push('/');
+  });
 
   return (
-    <CronJobContainer>
-      <CronJobPreview />
-      <input placeholder="*" value={valueCron} onChange={handleChangeValue} />
-      <LabelDate />
-      <ButtonContainer>
-        <ButtonPrev />
-        <ButtonNext />
-      </ButtonContainer>
-    </CronJobContainer>
+    <Container onSubmit={onSubmit}>
+      <CronJobContainer>
+        <p>{cronjob || '* * * * * *'}</p>
+        <input defaultValue={cronjob} {...register('cronjob')} />
+        {errors.cronjob && <p>{errors.cronjob.message}</p>}
+        <button type="submit">Guardar</button>
+      </CronJobContainer>
+    </Container>
   );
 };
 

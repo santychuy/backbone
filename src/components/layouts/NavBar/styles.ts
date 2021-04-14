@@ -1,9 +1,5 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  padding: 0 250px;
-`;
-
 export const NavBarContainer = styled.div`
   display: flex;
   align-items: center;

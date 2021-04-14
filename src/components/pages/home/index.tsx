@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { GetStaticProps } from 'next';
 
 import { getCronJobs, Cronjob } from '@/api/cronjobs';
-import Layout from '@/layout/main';
+import Layout from '@/components/layouts';
 import CardCronjob from '@/components/main/CardCronjob';
 
 import { Container } from './styles';
