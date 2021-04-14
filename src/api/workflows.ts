@@ -1,6 +1,6 @@
 import axios from '../libs/axios';
 
-interface Workflow {
+export interface Workflow {
   id: number;
   name: string;
   description: string;
@@ -15,6 +15,6 @@ export const getWorkflows = async () => {
     const workflows: Workflow[] = res.data;
     return workflows;
   } catch (e) {
-    return undefined;
+    throw new Error(e.message);
   }
 };

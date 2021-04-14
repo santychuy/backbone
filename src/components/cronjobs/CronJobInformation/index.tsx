@@ -1,20 +1,25 @@
+import { FC } from 'react';
 import { useQuery } from 'react-query';
+import { GetStaticProps } from 'next';
 
-import { getWorkflows } from '@/api/workflows';
+import { getWorkflows, Workflow } from '@/api/workflows';
 import { useCronJobsState } from '@/store/cronjobs';
 
 import { CronJobInfoContainer } from './styles';
 
-const CronJobInformation = () => {
+const CronJobInformation: FC<{ workflows: Workflow[] }> = ({ workflows }) => {
   const {
     name,
     setName,
     description,
     setDescription,
     setWorkflowId,
+    workflowId,
   } = useCronJobsState();
 
-  const { data, isLoading } = useQuery('workflows', getWorkflows);
+  const { data, isLoading } = useQuery('workflows', getWorkflows, {
+    initialData: workflows,
+  });
 
   return (
     <CronJobInfoContainer>
@@ -31,7 +36,11 @@ const CronJobInformation = () => {
         name="description"
       />
       {!isLoading && (
-        <select name="workflow" onChange={e => setWorkflowId(Number(e.target.value))}>
+        <select
+          name="workflow"
+          onChange={e => setWorkflowId(Number(e.target.value))}
+          value={workflowId}
+        >
           <option disabled selected>
             Seleccionar Workflow
           </option>
@@ -44,6 +53,13 @@ const CronJobInformation = () => {
       )}
     </CronJobInfoContainer>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const workflows: Workflow[] = await getWorkflows();
+  return {
+    props: { workflows },
+  };
 };
 
 export default CronJobInformation;

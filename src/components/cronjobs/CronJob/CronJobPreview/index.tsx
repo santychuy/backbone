@@ -1,13 +1,9 @@
 import { useCronJobsState } from '@/store/cronjobs';
 
 const CronJobPreview = () => {
-  const { seconds, minute, hour, dayMonth, month, dayWeek } = useCronJobsState();
+  const { cronJob } = useCronJobsState();
 
-  return (
-    <p>
-      {seconds} {minute} {hour} {dayMonth} {month} {dayWeek}
-    </p>
-  );
+  return <p>{cronJob}</p>;
 };
 
 export default CronJobPreview;

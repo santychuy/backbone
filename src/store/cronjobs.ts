@@ -5,12 +5,13 @@ interface CronJobsStateType extends State {
   setName: (value: string) => void;
   description: string;
   setDescription: (value: string) => void;
-  workflowId: number;
-  setWorkflowId: (value: number) => void;
+  workflowId?: number;
+  setWorkflowId: (value: number | undefined) => void;
   step: number;
   nextStep: () => void;
   prevStep: () => void;
   resetStep: () => void;
+  setStep: (step: number) => void;
   valueCron: string;
   setValueCron: (value: string) => void;
   seconds: string;
@@ -27,6 +28,10 @@ interface CronJobsStateType extends State {
   setMonth: (value: string) => void;
   setDayWeek: (value: string) => void;
   setCronJob: (value: string) => void;
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
+  cronJobId?: number;
+  setCronJobId: (id: number | undefined) => void;
 }
 
 export const useCronJobsState = create<CronJobsStateType>(set => ({
@@ -34,12 +39,13 @@ export const useCronJobsState = create<CronJobsStateType>(set => ({
   setName: name => set({ name }),
   description: '',
   setDescription: description => set({ description }),
-  workflowId: 0,
+  workflowId: undefined,
   setWorkflowId: workflowId => set({ workflowId }),
   step: 0,
   nextStep: () => set(state => ({ step: state.step + 1 })),
   prevStep: () => set(state => ({ step: state.step - 1 })),
   resetStep: () => set({ step: 0 }),
+  setStep: step => set({ step }),
   valueCron: '',
   setValueCron: value => set({ valueCron: value }),
   seconds: '*',
@@ -56,4 +62,8 @@ export const useCronJobsState = create<CronJobsStateType>(set => ({
   setDayWeek: dayWeek => set({ dayWeek }),
   cronJob: '* * * * * *',
   setCronJob: cronJob => set({ cronJob }),
+  isEditing: false,
+  setIsEditing: isEditing => set({ isEditing }),
+  cronJobId: undefined,
+  setCronJobId: id => set({ cronJobId: id }),
 }));

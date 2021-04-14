@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useMutation } from 'react-query';
+import { useRouter } from 'next/router';
 
 import { useCronJobsState } from '@/store/cronjobs';
 
-import { createCronJob } from '@/api/cronjobs';
+import { createCronJob, editCronJob } from '@/api/cronjobs';
 
 const ButtonNext = () => {
   const {
@@ -30,9 +31,16 @@ const ButtonNext = () => {
     name,
     description,
     workflowId,
+    isEditing,
+    setIsEditing,
+    cronJobId,
+    setCronJobId,
+    setWorkflowId,
   } = useCronJobsState();
 
-  const { mutate } = useMutation(createCronJob);
+  const createCronjobMutation = useMutation(createCronJob);
+  const editCronjobMutation = useMutation(editCronJob);
+  const { push } = useRouter();
 
   const handleNextStep = async () => {
     switch (step) {
@@ -67,13 +75,13 @@ const ButtonNext = () => {
         nextStep();
         break;
       default:
-        if (name !== '' && description !== '') {
+        if (name !== '' && description !== '' && workflowId) {
           setDayWeek(valueCron);
           setCronJob(`${seconds} ${minute} ${hour} ${dayMonth} ${month} ${valueCron}`);
           setValueCron('');
           nextStep();
         } else {
-          console.log('Completar nombre y descripcion');
+          console.log('Completar toda la información');
         }
         break;
     }
@@ -81,7 +89,22 @@ const ButtonNext = () => {
 
   useEffect(() => {
     if (step === 6) {
-      mutate({ name, description, scheduling: cronJob, workflow_id: workflowId });
+      if (isEditing) {
+        editCronjobMutation.mutate({
+          id: cronJobId!,
+          name,
+          description,
+          scheduling: cronJob,
+          workflowId: workflowId!,
+        });
+      } else {
+        createCronjobMutation.mutate({
+          name,
+          description,
+          scheduling: cronJob,
+          workflow_id: workflowId!,
+        });
+      }
       setCronJob('* * * * * *');
       setSeconds('*');
       setMinute('*');
@@ -91,7 +114,11 @@ const ButtonNext = () => {
       setDayWeek('*');
       setName('');
       setDescription('');
+      setWorkflowId(undefined);
+      setIsEditing(false);
+      setCronJobId(undefined);
       resetStep();
+      push('/');
     }
   }, [cronJob]);
 
