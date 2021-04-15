@@ -20,6 +20,8 @@
 
 ## Demo
 
+[Demo](https://backbone.vercel.app/)
+
 <br>
 
 ## Descripción
@@ -78,3 +80,5 @@ La aplicación nos ayuda a crear cronjobs, con información adicional y ligado a
 - Poder hacer reutilizables los componentes **Inputs** (Text, Select, TextArea)
 - Crear un tema para tener centralizado las constantes que tengan que ver con tamaño de fuentes de letra, colores, etc.
 - Parsear el cron de cada cronjob que tengamos y mostrar cuando será la proxima vez que se corra esa tarea
+- Dentro de **next.config.js** se activó la opción de `ignoreBuildErrors` ya que no dejaba hacer build al proyecto por un error de tipado en la dependencia de **react-hook-form**, en un futuro atacar este error y poder quitar esta opción
+- Crear una Github Action para el manejo de CD dentro de Vercel
