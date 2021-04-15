@@ -28,7 +28,10 @@ const CronJobAddContent = () => {
   }, []);
 
   return (
-    <Layout titleSEO="Agregar CronJob" descriptionSEO="Aqui agregaremos un nuevo cronjob">
+    <Layout
+      titleSEO="Agregar CronJob"
+      descriptionSEO="Esta parte nos dedicamos a crear y llenar la información necesaria para agregar un cronjob nuevo a la base de datos"
+    >
       {stepCron === 0 ? <CronJobInformation /> : <CronJob />}
     </Layout>
   );

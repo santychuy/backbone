@@ -1,14 +1,19 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-toastify';
 
 import { createCronJob, editCronJob } from '@/api/cronjobs';
+import ButtonSave from '@/components/common/Button';
 import { useCronJobsState } from '@/store/cronjobs';
-import { schema } from '@/validations/cronjobSchema';
 
-import { Container, CronJobContainer } from './styles';
+import {
+  Container,
+  CronJobContainer,
+  CronPreview,
+  InputCron,
+  ButtonBack,
+  ButtonsContainer,
+} from './styles';
 
 const CronJob = () => {
   const {
@@ -18,47 +23,55 @@ const CronJob = () => {
     name,
     description,
     workflowId,
+    setCronjob,
+    setStepCron,
   } = useCronJobsState();
   const createCronjobMutation = useMutation(createCronJob);
   const editCronjobMutation = useMutation(editCronJob);
   const { push } = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ cronjob: string }>({
-    mode: 'onSubmit',
-    resolver: yupResolver(schema),
-  });
-
-  const onSubmit = handleSubmit(data => {
+  const handleSaveCron = () => {
+    let msgToast: string;
     if (isEditing) {
       editCronjobMutation.mutate({
         id: cronJobId!,
         name,
         description,
-        scheduling: data.cronjob,
+        scheduling: cronjob || '* * * * * *',
         workflowId: workflowId!,
       });
+      msgToast = '✏️ Cronjob editado correctamente';
     } else {
       createCronjobMutation.mutate({
         name,
         description,
-        scheduling: data.cronjob,
+        scheduling: cronjob || '* * * * * *',
         workflow_id: workflowId!,
       });
+      msgToast = '😎 Cronjob creado correctamente';
     }
+    toast.success(msgToast);
     push('/');
-  });
+  };
 
   return (
-    <Container onSubmit={onSubmit}>
+    <Container
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       <CronJobContainer>
-        <p>{cronjob || '* * * * * *'}</p>
-        <input defaultValue={cronjob} {...register('cronjob')} />
-        {errors.cronjob && <p>{errors.cronjob.message}</p>}
-        <button type="submit">Guardar</button>
+        <CronPreview>{cronjob || '* * * * * *'}</CronPreview>
+        <InputCron value={cronjob} onChange={e => setCronjob(e.target.value)} />
+        <ButtonsContainer>
+          <ButtonBack label="Atras" type="button" onClick={() => setStepCron(0)} />
+          <ButtonSave
+            label="Guardar"
+            type="button"
+            onClick={handleSaveCron}
+            isLoading={createCronjobMutation.isLoading || editCronjobMutation.isLoading}
+          />
+        </ButtonsContainer>
       </CronJobContainer>
     </Container>
   );

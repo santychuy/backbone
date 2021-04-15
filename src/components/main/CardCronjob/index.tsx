@@ -1,11 +1,19 @@
 import { FC } from 'react';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 import { deleteCronJob } from '@/api/cronjobs';
 import { useCronJobsState } from '@/store/cronjobs';
 
-import { ButtonsContainer, CardContainer } from './styles';
+import {
+  CardContainer,
+  LabelsContainer,
+  Description,
+  ButtonsContainer,
+  ButtonIcon,
+  Cronjob,
+} from './styles';
 
 interface CardCronjobProps {
   id: number;
@@ -43,17 +51,25 @@ const CardCronjob: FC<CardCronjobProps> = ({
     push('/add');
   };
 
+  const handleDeleteCronjob = () => {
+    mutate(id);
+    toast.info('👁 Se eliminó el Cronjob correctamente');
+  };
+
   return (
     <CardContainer>
-      <h2>{name}</h2>
-      <p>{description}</p>
+      <LabelsContainer>
+        <h2>{name}</h2>
+        <Description>{description}</Description>
+        <Cronjob>Cron: {cronjob}</Cronjob>
+      </LabelsContainer>
       <ButtonsContainer>
-        <button type="button" onClick={handleEditCronjob}>
+        <ButtonIcon icon="pencil" onClick={handleEditCronjob} hoverColor="7CB86E">
           Editar
-        </button>
-        <button type="button" onClick={() => mutate(id)}>
+        </ButtonIcon>
+        <ButtonIcon icon="trash" onClick={handleDeleteCronjob} hoverColor="D64D4D">
           Eliminar
-        </button>
+        </ButtonIcon>
       </ButtonsContainer>
     </CardContainer>
   );

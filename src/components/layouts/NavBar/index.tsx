@@ -1,5 +1,8 @@
 import { useRouter } from 'next/router';
 
+import IconButton from '@/components/common/IconButton';
+import Button from '@/components/common/Button';
+
 import { NavBarContainer } from './styles';
 
 const NavBar = () => {
@@ -7,12 +10,8 @@ const NavBar = () => {
 
   return (
     <NavBarContainer>
-      <button type="button" onClick={() => push('/')}>
-        Prueba
-      </button>
-      <button type="button" onClick={() => push('/add')}>
-        Agregar Cronjob
-      </button>
+      <IconButton icon="home" onClick={() => push('/')} hoverColor="505050" />
+      <Button label="Agregar Cronjob" type="button" onClick={() => push('/add')} />
     </NavBarContainer>
   );
 };
