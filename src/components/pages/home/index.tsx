@@ -3,13 +3,14 @@ import { useQuery } from 'react-query';
 import { GetStaticProps } from 'next';
 import HashLoader from 'react-spinners/HashLoader';
 
-import { getCronJobs, Cronjob } from '@/api/cronjobs';
+import { getCronJobs } from '@/api/cronjobs';
 import Layout from '@/components/layouts';
-import CardCronjob from '@/components/main/CardCronjob';
+import CardCronjob from '@/components/pages/home/CardCronjob';
+import { CronjobRes } from '@/interfaces/';
 
 import { Container, LoadingContainer, ErrorMessage } from './styles';
 
-const CronJobs: FC<{ cronjobs?: Cronjob[] }> = ({ cronjobs }) => {
+const CronJobs: FC<{ cronjobs?: CronjobRes[] }> = ({ cronjobs }) => {
   const { data, isLoading, error } = useQuery('cronjobs', getCronJobs, {
     initialData: cronjobs,
   });
@@ -70,7 +71,7 @@ const CronJobs: FC<{ cronjobs?: Cronjob[] }> = ({ cronjobs }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const cronjobs: Cronjob[] = await getCronJobs();
+  const cronjobs: CronjobRes[] = await getCronJobs();
   return {
     props: { cronjobs },
   };

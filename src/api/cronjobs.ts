@@ -1,37 +1,12 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+import { CronJobEdit, CronjobData, CronjobRes } from '@/interfaces/';
+
 import axios from '../libs/axios';
-
-// TODO: Unir Interfaces
-export interface CronjobData {
-  name: string;
-  description: string;
-  scheduling: string;
-  workflow_id: number;
-}
-
-export interface Cronjob {
-  id: number;
-  name: string;
-  description: string;
-  scheduling: string;
-  workflow_id: number;
-  oauth_client_id: number | null;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date | null;
-}
-
-interface CronJobEdit {
-  id: number;
-  name: string;
-  description: string;
-  scheduling: string;
-  workflowId: number;
-}
 
 export const getCronJobs = async () => {
   try {
     const res = await axios.get('/cronjob');
-    const cronjobs: Cronjob[] = res.data;
+    const cronjobs: CronjobRes[] = res.data;
     return cronjobs;
   } catch (e) {
     throw new Error(e.message);
@@ -47,13 +22,13 @@ export const createCronJob = async (cronjob: CronjobData) => {
 };
 
 export const editCronJob = async (cronjob: CronJobEdit) => {
-  const { id, description, name, scheduling, workflowId } = cronjob;
+  const { id, description, name, scheduling, workflow_id } = cronjob;
   try {
     await axios.put(`/cronjob/${id}`, {
       name,
       description,
       scheduling,
-      workflow_id: workflowId,
+      workflow_id,
     });
   } catch (e) {
     throw new Error(e.message);

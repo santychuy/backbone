@@ -1,13 +1,6 @@
-import axios from '../libs/axios';
+import { Workflow } from '@/interfaces/';
 
-export interface Workflow {
-  id: number;
-  name: string;
-  description: string;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date | null;
-}
+import axios from '../libs/axios';
 
 export const getWorkflows = async () => {
   try {

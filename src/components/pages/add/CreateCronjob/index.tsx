@@ -15,7 +15,7 @@ import {
   ButtonsContainer,
 } from './styles';
 
-const CronJob = () => {
+const CreateCronjob = () => {
   const {
     cronjob,
     isEditing,
@@ -77,4 +77,4 @@ const CronJob = () => {
   );
 };
 
-export default CronJob;
+export default CreateCronjob;

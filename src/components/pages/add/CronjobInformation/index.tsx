@@ -6,8 +6,9 @@ import { useQuery } from 'react-query';
 import { GetStaticProps } from 'next';
 import HashLoader from 'react-spinners/HashLoader';
 
-import { getWorkflows, Workflow } from '@/api/workflows';
+import { getWorkflows } from '@/api/workflows';
 import Button from '@/components/common/Button';
+import { Workflow } from '@/interfaces/';
 import { useCronJobsState } from '@/store/cronjobs';
 import { schema } from '@/validations/cronjobInformationSchema';
 
@@ -23,13 +24,13 @@ import {
   InputSelect,
 } from './styles';
 
-interface CronJobInfoForm {
+interface CronjobInfoForm {
   name: string;
   description: string;
   workflow_id: number;
 }
 
-const CronJobInformation: FC<{ workflows?: Workflow[] }> = ({ workflows }) => {
+const CronjobInformation: FC<{ workflows?: Workflow[] }> = ({ workflows }) => {
   const {
     name,
     setName,
@@ -44,7 +45,7 @@ const CronJobInformation: FC<{ workflows?: Workflow[] }> = ({ workflows }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CronJobInfoForm>({
+  } = useForm<CronjobInfoForm>({
     mode: 'onSubmit',
     resolver: yupResolver(schema),
   });
@@ -117,4 +118,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default CronJobInformation;
+export default CronjobInformation;
